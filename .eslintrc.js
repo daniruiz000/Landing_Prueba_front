@@ -4,7 +4,14 @@ module.exports = {
     es2021: true,
   },
   extends: ["plugin:react/recommended", "standard-with-typescript"],
-  overrides: [],
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx", "*.js", "*.jsx"], // Agregar los tipos de archivos que deseas analizar
+      rules: {
+        // Reglas de ESLint para los archivos específicos
+      },
+    },
+  ],
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
@@ -39,6 +46,6 @@ module.exports = {
     "react/prop-types": "off",
     "jsx-quotes": [2, "prefer-double"],
     "react/no-unescaped-entities": "off",
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/explicit-function-return-type": "off",
   },
 };
