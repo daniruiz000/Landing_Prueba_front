@@ -9,15 +9,12 @@ export const fetchFunction = async (formData: FormData, navigate: NavigateFuncti
     });
 
     if (response.ok) {
-      // Si la respuesta es exitosa, espera la conversión a JSON y muestra una alerta con un mensaje de éxito.
       return true;
     } else {
-      // Si la respuesta no es exitosa, recupera el mensaje de error de la respuesta y muestra una alerta con ese mensaje.
       const errorText = await response.text();
       alert(`Error: ${response.status} - ${response.statusText}\n${errorText}`);
     }
   } catch (error: any) {
-    // Captura cualquier error en el proceso de la solicitud o conversión JSON y muestra una alerta con el mensaje de error.
     alert(`Error en fetchFunction: ${error.message}`);
   }
 };
