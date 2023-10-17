@@ -16,6 +16,9 @@ const Formulario = (): React.JSX.Element => {
     foto: null as File | null, // Para almacenar la foto seleccionada
   });
 
+  const [mostrarCondiciones, setMostrarCondiciones] = useState(false);
+  const [aceptarCondiciones, setAceptarCondiciones] = useState(false);
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setDatos({ ...datos, [name]: value });
@@ -26,22 +29,38 @@ const Formulario = (): React.JSX.Element => {
     setDatos({ ...datos, foto });
   };
 
+  const handleMostrarCondiciones = () => {
+    setMostrarCondiciones(true);
+  };
+
+  const handleCloseCondiciones = () => {
+    setMostrarCondiciones(false);
+  };
+
+  const handleAceptarCondiciones = () => {
+    setAceptarCondiciones(!aceptarCondiciones); // Cambiar el estado a lo opuesto
+  };
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    try {
-      const formRellenado = verificarFormularioCompleto(datos);
-      if (formRellenado) {
-        const formData = añadirDatos(datos);
-        const response = await fetchFunction(formData, navigate);
-        if (response) {
-          navigate("/correct");
+    if (!aceptarCondiciones) {
+      handleMostrarCondiciones();
+    } else {
+      try {
+        const formRellenado = verificarFormularioCompleto(datos);
+        if (formRellenado) {
+          const formData = añadirDatos(datos);
+          const response = await fetchFunction(formData, navigate);
+          if (response) {
+            navigate("/correct");
+          }
+        } else {
+          alert("Falta rellenar alguno de los datos");
         }
-      } else {
-        alert("Faltan rellenar alguno de los datos");
+      } catch (error) {
+        alert(error);
       }
-    } catch (error) {
-      alert(error);
     }
   };
 
@@ -50,23 +69,23 @@ const Formulario = (): React.JSX.Element => {
       <form className="formulario" onSubmit={handleSubmit}>
         <div className="campo-div">
           <label>Nombre:</label>
-          <input type="text" name="nombre" value={datos.nombre} onChange={handleInputChange} />
+          <input type="text" name="nombre" value={datos.nombre} required={true} onChange={handleInputChange} />
         </div>
         <div className="campo-div">
           <label>Apellido:</label>
-          <input type="text" name="apellido" value={datos.apellido} onChange={handleInputChange} />
+          <input type="text" name="apellido" value={datos.apellido} required={true} onChange={handleInputChange} />
         </div>
         <div className="campo-div">
           <label>Segundo Apellido:</label>
-          <input type="text" name="segundo_apellido" value={datos.segundo_apellido} onChange={handleInputChange} />
+          <input type="text" name="segundo_apellido" value={datos.segundo_apellido} required={true} onChange={handleInputChange} />
         </div>
         <div className="campo-div">
           <label>Email:</label>
-          <input type="email" name="email" value={datos.email} onChange={handleInputChange} />
+          <input type="email" name="email" value={datos.email} required={true} onChange={handleInputChange} />
         </div>
         <div className="campo-div">
           <label>Telefono:</label>
-          <input type="tel" name="telefono" value={datos.telefono} onChange={handleInputChange} />
+          <input type="tel" name="telefono" value={datos.telefono} required={true} onChange={handleInputChange} />
         </div>
         <div className="campo-div">
           <label>Subir Foto:</label>
@@ -75,7 +94,29 @@ const Formulario = (): React.JSX.Element => {
         <div>
           <button type="submit">Enviar</button>
         </div>
+        <div>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              handleMostrarCondiciones();
+            }}
+          >
+            Condiciones de uso
+          </a>
+        </div>
       </form>
+      {mostrarCondiciones && (
+        <div className="condiciones-div">
+          <div className="condiciones-content">
+            <h2>Condiciones de uso</h2>
+            <p>Debes aceptar las condiciones de uso para poder inscribirte.</p>
+            <p>Estas son las condiciones de uso.</p>
+            <input type="checkbox" onChange={handleAceptarCondiciones} checked={aceptarCondiciones} /> Aceptar
+            <button onClick={handleCloseCondiciones}>Cerrar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
