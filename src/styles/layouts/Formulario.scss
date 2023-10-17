@@ -34,10 +34,11 @@
 
     & label {
       color: $yellow;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
       font-size: 25px;
       margin: 10px auto;
-      -webkit-text-stroke: 0.8px #000; 
+      -webkit-text-stroke: 1px #000; 
+      letter-spacing: 3px;
       text-align: left;
       text-transform: uppercase;
     }

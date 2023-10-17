@@ -10,9 +10,9 @@ const Correct = (): React.JSX.Element => {
 
   return (
     <div className="correct">
-      <div className="header">
-        <h2 className="header_title"> Usuario registrado.</h2>
-        <h2 className="header_title"> Muchas gracias por participar.</h2>
+      <div className="correct_header">
+        <h2 className="correct_title"> Usuario registrado</h2>
+        <h2 className="correct_title"> Muchas gracias!!!</h2>
         <img className="container-down_calabaza" src={Calabaza} onClick={handleClick} />
       </div>
     </div>
