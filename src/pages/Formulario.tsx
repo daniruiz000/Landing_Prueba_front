@@ -1,6 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import "../styles/layouts/Formulario.scss"; // Importa tu archivo SCSS
 import { useNavigate } from "react-router";
+import { fetchFunction } from "../utils/fetchFunction";
+import { añadirDatos, verificarFormularioCompleto } from "../utils/dataUtils";
 
 const Formulario = (): React.JSX.Element => {
   const navigate = useNavigate();
@@ -11,7 +13,6 @@ const Formulario = (): React.JSX.Element => {
     segundo_apellido: "",
     email: "",
     telefono: "",
-    dni: "",
     foto: null as File | null, // Para almacenar la foto seleccionada
   });
 
@@ -29,34 +30,18 @@ const Formulario = (): React.JSX.Element => {
     event.preventDefault();
 
     try {
-      const formData = new FormData();
-      // Agrega los datos del formulario
-      formData.append("nombre", datos.nombre);
-      formData.append("apellido", datos.apellido);
-      formData.append("segundo_apellido", datos.segundo_apellido);
-      formData.append("email", datos.email);
-      formData.append("telefono", datos.telefono);
-      formData.append("dni", datos.dni);
-      // Agrega la foto si está presente
-      if (datos.foto) {
-        formData.append("foto", datos.foto);
-      }
-
-      // Realiza una solicitud POST con los datos y la foto
-      const response = await fetch("https://landing-promo-prueba-api.onrender.com/user/add-user", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        await response.json();
-        console.log("Datos enviados exitosamente:");
-        navigate("/correct");
+      const formRellenado = verificarFormularioCompleto(datos);
+      if (formRellenado) {
+        const formData = añadirDatos(datos);
+        const response = await fetchFunction(formData, navigate);
+        if (response) {
+          navigate("/correct");
+        }
       } else {
-        console.error("Error al enviar los datos.");
+        alert("Faltan rellenar alguno de los datos");
       }
     } catch (error) {
-      console.error("Error al realizar la solicitud POST:", error);
+      alert(error);
     }
   };
 
@@ -82,10 +67,6 @@ const Formulario = (): React.JSX.Element => {
         <div className="campo-div">
           <label>Telefono:</label>
           <input type="tel" name="telefono" value={datos.telefono} onChange={handleInputChange} />
-        </div>
-        <div className="campo-div">
-          <label>DNI:</label>
-          <input type="text" name="dni" value={datos.dni} onChange={handleInputChange} />
         </div>
         <div className="campo-div">
           <label>Subir Foto:</label>
